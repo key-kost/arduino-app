@@ -18,9 +18,9 @@ RST             D9           D8
 
 #include "ESP8266.h"
 
-#define SSID        "Wifi Kita"
-#define PASSWORD    "kospj2014season2"
-#define HOST_NAME   "ditoraharjo.co"
+#define SSID        "your_ssid"
+#define PASSWORD    "your_ssid_password"
+#define HOST_NAME   "your_host_root"
 #define HOST_PORT   (80)
 
 /* Define the DIO used for the SDA (SS) and RST (reset) pins. */
@@ -69,6 +69,7 @@ void loop()
   digitalWrite(8,HIGH);
 //  Serial.println(statusPintu);
 
+//  delay(100);
   
   //LOW = Pintu Ketutup
   if(digitalRead(4)==LOW){
@@ -78,7 +79,17 @@ void loop()
   //HIGH = Pintu Kebuka
   if(digitalRead(4)==HIGH){
       if(statusPintu==GA_NGETAP){
-          soundOn();
+          digitalWrite(12,HIGH);
+          delay(500);
+          digitalWrite(12,LOW);
+          delay(100);
+          digitalWrite(12,HIGH);
+          delay(500);
+          digitalWrite(12,LOW);
+          delay(100);
+          digitalWrite(12,HIGH);
+          delay(500);
+          digitalWrite(12,LOW);
         }      
   }
   
@@ -109,7 +120,7 @@ void loop()
     if(strcmp(temp,"NO_AUTH")!=0){
       soundOn();
       digitalWrite(8,LOW);
-      delay(1500);
+      delay(3000);
       digitalWrite(8,HIGH);  
       setWifi();
       sendData(temp);
@@ -181,8 +192,8 @@ void sendData(char* idRFID){
         Serial.print("create tcp err\r\n");
     }
 
-    char *hello1 = "GET /keykost/api/v1/log?rfid_tag=";
-    char *hello3 = " HTTP/1.1\r\nHost: ditoraharjo.co\r\nConnection: close\r\n\r\n";
+    char *hello1 = "GET /endpointAPI";
+    char *hello3 = " HTTP/1.1\r\nHost: your_host\r\nConnection: close\r\n\r\n";
 
     char *hello = new char[strlen(hello1)+strlen(idRFID)+strlen(hello3)] {'\0'};
 
@@ -214,12 +225,13 @@ void sendData(char* idRFID){
 char* authRFID(String rfidID){
     if(rfidID==RFID_1){
         Serial.println("Sukses authentikasi");
-        return "RFID_1";
+        return "PENYEWA_1";
       }
-    else if(rfidID==RFID_2){
-        Serial.println("Sukses authentikasi RFID 2");
-        return "RFID_2";
-      }
+      //set with your sync rfid Card
+//    else if(rfidID==RFID_2){
+//        Serial.println("Sukses authentikasi RFID 2");
+//        return "PENYEWA_2";
+//      }
     Serial.println("Gagal authentikasi");
     return "NO_AUTH";
   }
